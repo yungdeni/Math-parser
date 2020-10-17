@@ -21,6 +21,8 @@ namespace Parser
                 {"+", 2},
                 {"-", 2},
                 {"/", 3},
+                {"(", 1},
+                {")", 1},
                 {"*", 3}
 
             };
@@ -40,6 +42,20 @@ namespace Parser
                 {
                     outputQueue.Enqueue(inputData.Substring(0, 1));
                 }
+                else if (inputData.Substring(0, 1) == "(")
+                {
+                    operatorStack.Push(inputData.Substring(0, 1));
+                }
+                else if (inputData.Substring(0, 1) == ")")
+                {
+                    while (operatorStack.Peek() != "(")
+                    {
+                        outputQueue.Enqueue(operatorStack.Pop());
+                    }
+                    //Discard the (
+                    operatorStack.Pop();
+
+                }
                 else if (operators.TryGetValue(inputData.Substring(0, 1), out int presedence))
                 {
                     
@@ -50,6 +66,8 @@ namespace Parser
                     }
                     operatorStack.Push(inputData.Substring(0, 1));
                 }
+
+
 
 
                 inputData = inputData.Remove(0, 1);
