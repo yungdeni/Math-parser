@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Parser
@@ -32,6 +33,7 @@ namespace Parser
             Console.WriteLine("Input some math");
             inputData = Console.ReadLine();
             originalInput = inputData;
+            int length = 1;
 
 
             //https://en.wikipedia.org/wiki/Shunting-yard_algorithm
@@ -40,7 +42,10 @@ namespace Parser
 
                 if (int.TryParse(inputData.Substring(0, 1), out int number))
                 {
-                    outputQueue.Enqueue(inputData.Substring(0, 1));
+                    string[] numbers = Regex.Split(inputData, @"\D+");
+                    length = numbers[0].Length;
+                    outputQueue.Enqueue(numbers[0]);
+                    
                 }
                 else if (inputData.Substring(0, 1) == "(")
                 {
@@ -70,7 +75,8 @@ namespace Parser
 
 
 
-                inputData = inputData.Remove(0, 1);
+                inputData = inputData.Remove(0, length);
+                length = 1;
             }
             while(operatorStack.Count != 0)
             {
